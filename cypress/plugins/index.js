@@ -23,13 +23,8 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
 
   //Uso do banco PostGres
-  const pool = new Pool({
-    host:'ziggy.db.elephantsql.com',
-    user: 'hmddxrgk',
-    password: 'BvoSvrj5S92ASp_oqRyugo5qmGanOnt6',
-    database: 'hmddxrgk',
-    port: 5432
-  })
+  const configJason = require(config.configFile)
+  const pool = new Pool(configJason.dbconfig)
 
   on('task', {
     removeUser(email){
