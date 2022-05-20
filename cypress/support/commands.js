@@ -23,3 +23,21 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+//Função ou Metodo para remoção e dastro do usuario no banco
+Cypress.Commands.add('postUser', function (user) {
+    //Sempre apaga do banco
+    cy.task('removeUser', user.email)
+        .then(function (result) {
+            console.log(result)
+        })
+    //Sempre cadastra no banco
+    cy.request(
+        'POST',
+        'http://localhost:3333/users',
+        user
+
+    ).then(function (response) {
+        expect(response.status).to.eq(200)
+    })
+})
