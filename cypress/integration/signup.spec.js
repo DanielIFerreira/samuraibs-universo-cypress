@@ -2,33 +2,36 @@
 import signupPage from '../support/pages/signup/index'
 describe('cadastro', function () {
 
-    context('quando o usuário é um novato', () => {
-        //Objeto 
-        const user = {
-            name: "Daniel Ferreira",
-            email: "daniel.i.ferreira@outlook.com",
-            password: "pwd123"
-        }
+    before(function() {
+        cy.fixture('signup')
+            .then(function(signup){
+                this.success = signup.success
+                this.email_duplicado = signup.email_duplicado
+                this.email_inv = signup.email_inv
+                this.short_password = signup.short_password
+            })
+    })
+    context('quando o usuário é um novato', function() {
 
         before(function () {
             //Tarefa para dar roolback no banco e apagar o email cadastrado
-            cy.task('removeUser', user.email)
+            cy.task('removeUser', this.success.email)
                 .then(function (result) {
                     console.log(result)
                 })
         })
 
 
-        it('deve cadastrar com sucesso', () => {
+        it('deve cadastrar com sucesso', function() {
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.success)
             signupPage.submit()
             signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
 
         });
     })
 
-    context('quando o email já existe', () => {
+    context('quando o email já existe', function(){
         const user = {
             name: "Daniel Independente",
             email: "daniel@indepentente.com",
@@ -40,7 +43,7 @@ describe('cadastro', function () {
             cy.postUser(user)
         })
 
-        it('deve exibir email ja cadastrado', () => {
+        it('deve exibir email ja cadastrado', function() {
             signupPage.go()
             signupPage.form(user)
             signupPage.submit()
@@ -49,18 +52,18 @@ describe('cadastro', function () {
         });
     })
 
-    context('quando o email estiver incorreto', ()=>{
+    context('quando o email estiver incorreto', function(){
         const user = {
             name: "Elizabeth Olsen",
             email: "liza.yahoo.com",
             password: "pwd123"
         }
 
-        it('deve exibir mensagem de alerta', () =>{
+        it('deve exibir mensagem de alerta', function(){
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.email_inv)
             signupPage.submit()
-            signupPage.alertHaveText('Informe um email válido')
+            signupPage.alert.haveText('Informe um email válido')
         })
     })
 
@@ -75,7 +78,7 @@ describe('cadastro', function () {
             signupPage.go()
             signupPage.formInvalido(user)
             signupPage.submit()
-            signupPage.alertHaveText('Nome é obrigatório')
+            signupPage.alert.haveText('Nome é obrigatório')
         })
     })
 
@@ -89,22 +92,37 @@ describe('cadastro', function () {
 
         passwords.forEach(function(p){
             it('não deve cadastrar com a senha: '+ p, function(){
-                const user = {
-                    name: "Jose",
-                    email: "jose@indep.com",
-                    password: p
-                }
+                this.short_password.password = p
     
-                signupPage.form(user)
+                signupPage.form(this.short_password)
                 signupPage.submit()
                 
             })
         })
 
         afterEach(function(){
-            signupPage.alertHaveText('Pelo menos 6 caracteres')
+            signupPage.alert.haveText('Pelo menos 6 caracteres')
         })
         
     }) 
+
+    context('quando não preencho nenhum dos campos', () =>{
+        const alertMessages = [
+            'E-mail é obrigatório',
+            'Senha é obrigatória',
+            'Nome é obrigatório'      
+        ]
+
+        before(function(){
+            signupPage.go()
+            signupPage.submit()
+        })
+
+        alertMessages.forEach(function(alert){
+            it('deve exibir ' + alert.toLowerCase , () => {
+                signupPage.alert.haveText(alert)
+            });
+        })
+    })
 
 })

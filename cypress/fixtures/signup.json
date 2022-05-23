@@ -1,0 +1,23 @@
+{
+  "success": {
+    "name": "Daniel Ferreira",
+    "email": "daniel.i.ferreira@outlook.com",
+    "password": "pwd123"
+  },
+  "email_duplicado": {
+    "name": "Daniel Ferreira",
+    "email": "daniel@indepentente.com",
+    "password": "pwd123"
+  },
+  "email_inv": {
+    "name": "Elizabeth Olsen",
+    "email": "liza.yahoo.com",
+    "password": "pwd123"
+  },
+  "short_password": {
+    "name": "Daniel Ferreira",
+    "email":"daniel.i.ferreira@outlook.com",
+    "null": null
+  }
+}
+
