@@ -4,10 +4,11 @@
     "email": "daniel.i.ferreira@outlook.com",
     "password": "pwd123"
   },
-  "email_duplicado": {
+  "email_dup": {
     "name": "Daniel Ferreira",
     "email": "daniel@indepentente.com",
-    "password": "pwd123"
+    "password": "pwd123",
+    "is_provider": true
   },
   "email_inv": {
     "name": "Elizabeth Olsen",

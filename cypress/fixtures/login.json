@@ -1,0 +1,15 @@
+{
+  "success": {
+    "name": "Daniel Ferreira",
+    "email": "daniel.i.ferreira@outlook.com",
+    "password": "pwd123",
+    "is_provider": true
+  },
+  "password_inv": {
+    "name": "Zequinha da Silva'",
+    "email": "zequinha@teste.com",
+    "password": "pwd123",
+    "is_provider": true
+  }
+}
+

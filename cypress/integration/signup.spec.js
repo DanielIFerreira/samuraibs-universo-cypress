@@ -6,7 +6,7 @@ describe('cadastro', function () {
         cy.fixture('signup')
             .then(function(signup){
                 this.success = signup.success
-                this.email_duplicado = signup.email_duplicado
+                this.email_dup = signup.email_dup
                 this.email_inv = signup.email_inv
                 this.short_password = signup.short_password
             })
@@ -32,20 +32,14 @@ describe('cadastro', function () {
     })
 
     context('quando o email já existe', function(){
-        const user = {
-            name: "Daniel Independente",
-            email: "daniel@indepentente.com",
-            password: "pwd123",
-            is_provider: true
-        }
-
+        
         before(function () {
-            cy.postUser(user)
+            cy.postUser(this.email_dup)
         })
 
         it('deve exibir email ja cadastrado', function() {
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.email_dup)
             signupPage.submit()
             signupPage.toast.shouldHaveText('Email já cadastrado para outro usuário.')
            
@@ -53,12 +47,7 @@ describe('cadastro', function () {
     })
 
     context('quando o email estiver incorreto', function(){
-        const user = {
-            name: "Elizabeth Olsen",
-            email: "liza.yahoo.com",
-            password: "pwd123"
-        }
-
+    
         it('deve exibir mensagem de alerta', function(){
             signupPage.go()
             signupPage.form(this.email_inv)

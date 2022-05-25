@@ -4,30 +4,33 @@ import dashPage from '../support/pages/dash'
 
 
 describe('login', () => {
+    before(function() {
+        cy.fixture('login')
+            .then(function(login){
+                this.success = login.success
+                this.password_inv = login.password_inv
+                this.email_inv = login.email_inv
+                this.short_password = login.short_password
+            })
+    })
 
-    context('quando o usuário é muito bom', () => {
-        const user = {
-            name: 'Daniel Ferreira',
-            email: "daniel.i.ferreira@outlook.com",
-            password: "pwd123",
-            is_provider: true
-        }
-
+    context('quando o usuário é muito bom', function() {
+    
         //Usado para sempre apagar o user do banco e refazer novamente
         before(function () {
             //implementação na camada commands
-            cy.postUser(user)
+            cy.postUser(this.success)
         })
 
-        it('deve logar com sucesso', () => {
+        it('deve logar com sucesso', function(){
             loginPage.go()
-            loginPage.form(user)
+            loginPage.form(this.success)
             loginPage.submit()
-            dashPage.header.userLoggedIn(user.name)
+            dashPage.header.userLoggedIn(this.success.name)
         });
     })
 
-    context('quando o usuário é bom mais a senha está incorreta', () =>{
+    context('quando o usuário é bom mais a senha está incorreta', function(){
 
         let user = {
             name: 'Zequinha da Silva',
@@ -38,15 +41,15 @@ describe('login', () => {
         }
 
         before(function(){
-            cy.postUser(user)
+            cy.postUser(this.password_inv)
                 .then(function(){
-                    user.password = 'abc123'
+                    this.password_inv.password = 'abc123'
                 })
             
         })
-        it('deve notificar erro de credenciais', () => {
+        it('deve notificar erro de credenciais', function() {
             loginPage.go()
-            loginPage.form(user)
+            loginPage.form(this.password_inv)
             loginPage.submit()
             loginPage.toast.shouldHaveText('Ocorreu um erro ao fazer login, verifique suas credenciais.')
         });
